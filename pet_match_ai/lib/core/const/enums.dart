@@ -1,8 +1,9 @@
 enum LanguageType {
-  ru('RU'),
-  en('EN');
+  ru(label: 'RU', code: 'ru'),
+  en(label: 'EN', code: 'en');
 
   final String label;
+  final String code;
 
-  const LanguageType(this.label);
+  const LanguageType({required this.label, required this.code});
 }

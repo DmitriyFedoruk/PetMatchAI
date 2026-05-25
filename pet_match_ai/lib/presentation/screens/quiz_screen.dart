@@ -51,9 +51,14 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocSelector<QuizScreenCubit, QuizScreenState, bool>(
-      selector: (state) => state is QuizScreenLoaded,
-      builder: (context, isLoaded) {
-        return isLoaded ? _Question() : const Loader(topPadding: 0);
+      selector: (state) => state.isLoading,
+      builder: (context, isLoading) {
+        return isLoading
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [Loader(topPadding: 0)],
+              )
+            : _Question();
       },
     );
   }
@@ -70,23 +75,13 @@ class _Question extends StatelessWidget {
       children: [
         Text(AppStrings.pleaseAnswer, style: typography.body),
         BlocSelector<QuizScreenCubit, QuizScreenState, String>(
-          selector: (state) {
-            if (state is QuizScreenLoaded) {
-              return state.question;
-            }
-            return '';
-          },
+          selector: (state) => state.question,
           builder: (context, title) {
             return Text(title, style: typography.header);
           },
         ),
         BlocSelector<QuizScreenCubit, QuizScreenState, ProgressModel?>(
-          selector: (state) {
-            if (state is QuizScreenLoaded) {
-              return state.progressModel;
-            }
-            return null;
-          },
+          selector: (state) => state.progressModel,
           builder: (context, state) {
             return QuizProgressIndicator(
               currentQuestion: state?.currentQuestion ?? 1,
@@ -102,12 +97,8 @@ class _Question extends StatelessWidget {
           QuizScreenState,
           ({List<AnswerModel> answers, int? selectedId})
         >(
-          selector: (state) {
-            if (state is QuizScreenLoaded) {
-              return (answers: state.answers, selectedId: state.selectedId);
-            }
-            return (answers: [], selectedId: null);
-          },
+          selector: (state) =>
+              (answers: state.answers, selectedId: state.selectedId),
           builder: (context, state) {
             return AnswersSector(
               answers: state.answers,
@@ -118,17 +109,14 @@ class _Question extends StatelessWidget {
         Spacer(),
 
         BlocSelector<QuizScreenCubit, QuizScreenState, bool>(
-          selector: (state) {
-            if (state is QuizScreenLoaded) {
-              return state.selectedId != null;
-            }
-            return false;
-          },
+          selector: (state) => state.selectedId != null,
           builder: (context, isSelected) {
             return isSelected
                 ? CustomButton(
                     onPressed: () {
-                      context.read<QuizScreenCubit>().answerOnQuestion();
+                      context.read<QuizScreenCubit>().answerOnQuestion(
+                        languageNotifier.value.code,
+                      );
                     },
                     title: AppStrings.continue_,
                   )

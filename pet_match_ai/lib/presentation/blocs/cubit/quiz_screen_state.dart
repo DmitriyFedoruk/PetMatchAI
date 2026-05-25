@@ -1,32 +1,33 @@
 part of 'quiz_screen_cubit.dart';
 
-sealed class QuizScreenState extends Equatable {}
-
-final class QuizScreenInitial extends QuizScreenState {
-  @override
-  List<Object?> get props => [];
-}
-
-final class QuizScreenLoaded extends QuizScreenState {
+final class QuizScreenState extends Equatable {
+  final bool isLoading;
   final String question;
+  final int questionId;
   final ProgressModel? progressModel;
   final List<AnswerModel> answers;
   final int? selectedId;
-  QuizScreenLoaded({
+  const QuizScreenState({
+    this.isLoading = false,
     required this.question,
+    required this.questionId,
     required this.progressModel,
     required this.answers,
     this.selectedId,
   });
 
-  QuizScreenLoaded copyWith({
+  QuizScreenState copyWith({
+    bool? isLoading,
     String? question,
+    int? questionId,
     ProgressModel? Function()? progressModel,
     List<AnswerModel>? answers,
     int? Function()? selectedId,
   }) {
-    return QuizScreenLoaded(
+    return QuizScreenState(
+      isLoading: isLoading ?? this.isLoading,
       question: question ?? this.question,
+      questionId: questionId ?? this.questionId,
       progressModel: progressModel != null
           ? progressModel()
           : this.progressModel,
@@ -36,5 +37,12 @@ final class QuizScreenLoaded extends QuizScreenState {
   }
 
   @override
-  List<Object?> get props => [question, progressModel, answers, selectedId];
+  List<Object?> get props => [
+    isLoading,
+    question,
+    questionId,
+    progressModel,
+    answers,
+    selectedId,
+  ];
 }

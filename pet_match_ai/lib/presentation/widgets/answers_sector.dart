@@ -71,7 +71,9 @@ class _Item extends StatelessWidget {
                   : _CircleUnselectedCheckbox(),
 
               const SizedBox(width: 8),
-              Text(answer.label, style: context.typography.body),
+              Flexible(
+                child: Text(answer.label, style: context.typography.body),
+              ),
             ],
           ),
         ),

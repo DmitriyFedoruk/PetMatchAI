@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class StartQuizDto {
-  final User user;
+  final User? user;
   final Stats stats;
   final NextQuestion nextQuestion;
   final bool isNewUser;
@@ -17,7 +17,7 @@ class StartQuizDto {
 
   Map<String, dynamic> toMap() {
     return {
-      'user': user.toMap(),
+      'user': user?.toMap(),
       'stats': stats.toMap(),
       'next_question': nextQuestion.toMap(),
       'is_new_user': isNewUser,
@@ -27,7 +27,7 @@ class StartQuizDto {
 
   factory StartQuizDto.fromMap(Map<String, dynamic> map) {
     return StartQuizDto(
-      user: User.fromMap(map['user']),
+      user: map['user'] != null ? User.fromMap(map['user']) : null,
       stats: Stats.fromMap(map['stats']),
       nextQuestion: NextQuestion.fromMap(map['next_question']),
       isNewUser: map['is_new_user'] ?? false,
